@@ -1,0 +1,5 @@
+*.nc
+*.nc4
+*.jar
+output/
+.DS_Store
