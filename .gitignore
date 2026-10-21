@@ -1,0 +1,16 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# NetCDF datasets
+*.nc
+*.nc4
+
+# Generated results
+output/
+figures/
+
+# macOS
+.DS_Store
