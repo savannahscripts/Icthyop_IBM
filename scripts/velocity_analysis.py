@@ -168,8 +168,3 @@ print(f"Courant number: {courant:.3f}")
 print("\nAnalysis complete.")
 
 ds.close()
-
-git status
-git add scripts/velocity_analysis.py
-git commit -m "Calculate GLORYS maximum velocity and CFL timestep"
-git push
