@@ -152,6 +152,47 @@ particle_lon = longitudes[particle_indices[:, 1]]
 print(f"Particles generated: {len(particle_lat)}")
 
 
+# %% 7A. VALIDATE RELEASE DEPTH ----------------------------------
+#
+# Check that the selected release cells contain valid velocity
+# and temperature data at the model depth nearest to 5 m.
+# ---------------------------------------------------------------
+
+target_depth = abs(release_depth)
+
+depth_index = int(
+    np.abs(ds.depth.values - target_depth).argmin()
+)
+
+actual_depth = float(ds.depth.values[depth_index])
+
+print("\n--- RELEASE DEPTH VALIDATION ---")
+print(f"Requested depth: {target_depth:.2f} m")
+print(f"Nearest GLORYS depth: {actual_depth:.2f} m")
+
+depth_valid = (
+    period["uo"].isel(depth=depth_index).notnull().all("time")
+    & period["vo"].isel(depth=depth_index).notnull().all("time")
+    & period["thetao"].isel(depth=depth_index).notnull().all("time")
+)
+
+# Check every selected release cell
+particle_depth_valid = depth_valid.values[
+    particle_indices[:, 0],
+    particle_indices[:, 1]
+]
+
+valid_particles = int(particle_depth_valid.sum())
+
+print(f"Particles in valid depth cells: {valid_particles}")
+print(f"Total particles: {n_particles}")
+
+if valid_particles == n_particles:
+    print("PASS: All release cells valid at selected depth")
+else:
+    print("FAIL: Some release cells invalid at selected depth")
+
+
 # %% 8. EXPORT ICHTHYOP RELEASE FILE -----------------------------
 
 release_file = output_dir / "upstream_release.txt"
